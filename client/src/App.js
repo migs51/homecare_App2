@@ -1,23 +1,29 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Landing from './components/layout/Landing';
-import Register from './components/auth/Register';
-import Login from './components/auth/Login';
+import Books from './pages/Books';
+import Detail from './pages/Detail';
+import NoMatch from './pages/NoMatch';
+import Nav from './components/Nav';
 
-const App = () => (
-  <Router>
-    <Fragment>
-      <Navbar />
-      <Route exact path='/' component={Landing} />
-      <section className='container'>
+function App() {
+  return (
+    <Router>
+      <div>
+        <Nav />
         <Switch>
-          <Route exact path='/register' component={Register} />
-          <Route exact path='/login' component={Login} />
+          <Route exact path={['/', '/books']}>
+            <Books />
+          </Route>
+          <Route exact path='/books/:id'>
+            <Detail />
+          </Route>
+          <Route>
+            <NoMatch />
+          </Route>
         </Switch>
-      </section>
-    </Fragment>
-  </Router>
-);
+      </div>
+    </Router>
+  );
+}
 
 export default App;
