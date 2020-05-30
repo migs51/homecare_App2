@@ -1,20 +1,29 @@
 import axios from 'axios';
+import store from '../store';
+import { LOGOUT, CLEAR_PROFILE } from '../actions/types';
 
-export default {
-  // Gets all patients
-  getPatients: function () {
-    return axios.get('/api/patient');
-  },
-  // Gets the patient with the given id
-  getPatient: function (id) {
-    return axios.get('/api/patient/' + id);
-  },
-  // Deletes the patient with the given id
-  deletePatient: function (id) {
-    return axios.delete('/api/patient/' + id);
-  },
-  // Saves a patient to the database
-  savePatient: function (patientData) {
-    return axios.post('/api/patient', patientData);
-  },
-};
+const api = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+/**
+ intercept any error responses from the api
+ and check if the token is no longer valid.
+ ie. Token has expired
+ logout the user if the token has expired
+**/
+
+api.interceptors.response.use(
+  res => res,
+  err => {
+    if (err.response.data.msg === 'Token is not valid') {
+      store.dispatch({ type: LOGOUT });
+      store.dispatch({ type: CLEAR_PROFILE });
+    }
+    return Promise.reject(err);
+  }
+);
+
+export default api;
