@@ -11,7 +11,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         <Link to='/patient'>Patients</Link>
       </li>
       <li>
-        <Link to='/login' className='fas fa-sign-out-alt' onClick={logout}>
+        <Link to='/' className='fas fa-sign-out-alt' onClick={logout}>
           Logout
         </Link>
       </li>
