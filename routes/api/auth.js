@@ -4,13 +4,13 @@ const bcrypt = require('bcryptjs');
 const auth = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
-//@route     GET api/auth
-//@desc      Test route
-//@access     public
+// @route    GET api/auth
+// @desc     Get user by token
+// @access   Private
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -21,9 +21,9 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-//@route     POST api/auth
-//@desc      Authenticate user & get token
-//@access     public
+// @route    POST api/auth
+// @desc     Authenticate user & get token
+// @access   Public
 router.post(
   '/',
   [
@@ -39,7 +39,6 @@ router.post(
     const { email, password } = req.body;
 
     try {
-      //See if user exists
       let user = await User.findOne({ email });
 
       if (!user) {
@@ -48,7 +47,6 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      //use bcrypt compare method to compare the password string to the hased password
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
@@ -57,17 +55,16 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      //create payload
       const payload = {
         user: {
           id: user.id,
         },
       };
-      //sign the token and pass in payload and jwtSecret. send back token in the callback
+
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
+        { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
@@ -79,7 +76,5 @@ router.post(
     }
   }
 );
-
-module.exports = router;
 
 module.exports = router;

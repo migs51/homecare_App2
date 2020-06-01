@@ -5,8 +5,8 @@ import { LOGOUT, CLEAR_PROFILE } from '../actions/types';
 const api = axios.create({
   baseURL: '/api',
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 /**
  intercept any error responses from the api
@@ -16,8 +16,8 @@ const api = axios.create({
 **/
 
 api.interceptors.response.use(
-  res => res,
-  err => {
+  (res) => res,
+  (err) => {
     if (err.response.data.msg === 'Token is not valid') {
       store.dispatch({ type: LOGOUT });
       store.dispatch({ type: CLEAR_PROFILE });

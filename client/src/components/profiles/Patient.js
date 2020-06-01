@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import ProfileItem from './ProfileItem';
+import PatientItem from './PatientItem';
 import { getProfiles } from '../../actions/profile';
 
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
@@ -16,18 +17,24 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className='large text-primary'>Developers</h1>
+          <h1 className='large text-primary'>Patients</h1>
+          <Link
+            to='/create-profile'
+            className='btn btn-primary my-1 float-right'
+          >
+            Create Patient
+          </Link>
+
           <p className='lead'>
-            <i className='fab fa-connectdevelop' /> Browse and connect with
-            developers
+            <i className='fab fa-connectdevelop' /> All patients:
           </p>
           <div className='profiles'>
             {profiles.length > 0 ? (
-              profiles.map(profile => (
-                <ProfileItem key={profile._id} profile={profile} />
+              profiles.map((profile) => (
+                <PatientItem key={profile._id} profile={profile} />
               ))
             ) : (
-              <h4>No profiles found...</h4>
+              <h4>No patients found...</h4>
             )}
           </div>
         </Fragment>
@@ -38,14 +45,11 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
 
 Profiles.propTypes = {
   getProfiles: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  profile: state.profile
+const mapStateToProps = (state) => ({
+  profile: state.profile,
 });
 
-export default connect(
-  mapStateToProps,
-  { getProfiles }
-)(Profiles);
+export default connect(mapStateToProps, { getProfiles })(Profiles);

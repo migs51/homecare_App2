@@ -4,13 +4,14 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const { check, validationResult } = require('express-validator/check');
-//import User schema
+const { check, validationResult } = require('express-validator');
+const normalize = require('normalize-url');
+
 const User = require('../../models/User');
 
-//@route     POST api/users
-//@desc      Register user
-//@access     public
+// @route    POST api/users
+// @desc     Register user
+// @access   Public
 router.post(
   '/',
   [
@@ -30,7 +31,6 @@ router.post(
     const { name, email, password } = req.body;
 
     try {
-      //See if user exists
       let user = await User.findOne({ email });
 
       if (user) {
@@ -39,14 +39,15 @@ router.post(
           .json({ errors: [{ msg: 'User already exists' }] });
       }
 
-      //Get users gravatar
-      const avatar = gravatar.url(email, {
-        s: '200',
-        r: 'pg',
-        d: 'mm',
-      });
+      const avatar = normalize(
+        gravatar.url(email, {
+          s: '200',
+          r: 'pg',
+          d: 'mm',
+        }),
+        { forceHttps: true }
+      );
 
-      //create new user instance
       user = new User({
         name,
         email,
@@ -54,25 +55,22 @@ router.post(
         password,
       });
 
-      //Encrypt password
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(password, salt);
-      //save user to DB
+
       await user.save();
 
-      //Return jsonwebtoken
-      //grabpayload which inclues userid
       const payload = {
         user: {
           id: user.id,
         },
       };
-      //sign the token and pass in payload and jwtSecret
+
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
+        { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
           res.json({ token });
