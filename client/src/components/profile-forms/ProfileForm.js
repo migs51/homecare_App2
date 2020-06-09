@@ -41,11 +41,12 @@ const ProfileForm = ({
       for (const key in profile) {
         if (key in profileData) profileData[key] = profile[key];
       }
-      for (const key in profile.social) {
-        if (key in profileData) profileData[key] = profile.social[key];
+      for (const key in profile.responsibleParty) {
+        if (key in profileData)
+          profileData[key] = profile.responsibleParty[key];
       }
-      if (Array.isArray(profileData.skills))
-        profileData.skills = profileData.skills.join(', ');
+      // if (Array.isArray(profileData.skills))
+      //   profileData.skills = profileData.skills.join(', ');
       setFormData(profileData);
     }
   }, [loading, getCurrentProfile, profile]);

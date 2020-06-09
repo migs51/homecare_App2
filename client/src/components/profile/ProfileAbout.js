@@ -10,15 +10,16 @@ const ProfileAbout = ({
     city,
     state,
     zip,
-    responsibleParty,
-    // firstName2,
-    // lastName2,
-    // relationship,
-    // phone,
-    // address2,
-    // city2,
-    // state2,
-    // zip2,
+    responsibleParty: {
+      firstName2,
+      lastName2,
+      relationship,
+      phone,
+      address2,
+      city2,
+      state2,
+      zip2,
+    },
   },
 }) => {
   return (
@@ -48,20 +49,19 @@ const ProfileAbout = ({
       </div>
       <div className='profile-about bg-light p-2'>
         <h3 className='text-primary'>
-          Responsible Party: {responsibleParty.firstName2}{' '}
-          {responsibleParty.lastName2}
+          Responsible Party: {firstName2} {lastName2}
           <br></br>
-          Relationship:{responsibleParty.relationship}
+          Relationship:{relationship}
           <br></br>
-          Phone: {responsibleParty.phone}
+          Phone: {phone}
           <br></br>
-          Address: {responsibleParty.address2}
+          Address: {address2}
           <br></br>
-          City: {responsibleParty.city2}
+          City: {city2}
           <br></br>
-          State: {responsibleParty.state2}
+          State: {state2}
           <br></br>
-          Zip: {responsibleParty.zip2}
+          Zip: {zip2}
         </h3>
       </div>
     </div>
